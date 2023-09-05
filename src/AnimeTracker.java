@@ -126,6 +126,9 @@ public class AnimeTracker {
                                 found = true;
                                 System.out.println("Anime: " + temp.getAnimeName() + " (Rating: " + temp.getAnimeRating() + ")");
                                 LogToFile("Anime: " + temp.getAnimeName() + " (Rating: " + temp.getAnimeRating() + ")");
+
+                                // cache the anime
+                                animeList.put(temp.getAnimeName(),temp);
                             }
                         }
                         fileReader.close();
