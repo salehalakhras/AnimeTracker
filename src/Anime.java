@@ -1,6 +1,15 @@
 public class Anime {
     private String animeName;
     private Float animeRating;
+    private int useTimes = 0;
+
+    public int getUseTimes() {
+        return useTimes;
+    }
+
+    public void incrUseTimes() {
+        this.useTimes++;
+    }
 
     public Anime(){}
 

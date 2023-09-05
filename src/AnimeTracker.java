@@ -1,6 +1,4 @@
 import java.io.*;
-import java.util.LinkedHashMap;
-import java.util.Map;
 import java.util.Scanner;
 
 import static java.lang.Float.parseFloat;
@@ -8,13 +6,7 @@ import static java.lang.Float.parseFloat;
 
 public class AnimeTracker {
     public static BufferedWriter fileWriter;
-    public static Map<String, Anime> animeList = new LinkedHashMap<String, Anime>() {
-        @Override
-        // remove the eldest entry when the list size gets higher than 10
-        protected boolean removeEldestEntry(Map.Entry<String, Anime> eldest) {
-            return size() > 10;
-        }
-    };
+    public static AnimeCache animeList = new AnimeCache();
 
 
     /**
@@ -101,19 +93,15 @@ public class AnimeTracker {
             } else {
                 // if the input has characters
                 if (userInput.matches(".*[a-zA-Z].*")) {
-                    // check if the anime is in the cache
-                    boolean inCache = false;
-                    for (Anime anime : animeList.values()) {
-                        // if it is in cache print it
-                        if (similar(anime.getAnimeName(), userInput, 2)) {
-                            inCache = true;
-                            System.out.println("Anime: " + anime.getAnimeName() + " (Rating: " + anime.getAnimeRating() + ")");
-                            LogToFile("Anime: " + anime.getAnimeName() + " (Rating: " + anime.getAnimeRating() + ")");
-                            break;
-                        }
+                    // search the cache
+                    Anime anime = animeList.findAnime(userInput);
+                    // if the anime is in the cache
+                    if (anime != null) {
+                        System.out.println("Anime: " + anime.getAnimeName() + " (Rating: " + anime.getAnimeRating() + ")");
+                        LogToFile("Anime: " + anime.getAnimeName() + " (Rating: " + anime.getAnimeRating() + ")");
                     }
                     // if the anime is not in cache
-                    if (!inCache) {
+                    else {
                         // create a file reader to read the anime list
                         BufferedReader fileReader = new BufferedReader(new FileReader("src/anime.txt"));
                         String currentLine;
@@ -126,9 +114,8 @@ public class AnimeTracker {
                                 found = true;
                                 System.out.println("Anime: " + temp.getAnimeName() + " (Rating: " + temp.getAnimeRating() + ")");
                                 LogToFile("Anime: " + temp.getAnimeName() + " (Rating: " + temp.getAnimeRating() + ")");
-
                                 // cache the anime
-                                animeList.put(temp.getAnimeName(),temp);
+                                animeList.addAnime(temp);
                             }
                         }
                         fileReader.close();
@@ -179,3 +166,4 @@ public class AnimeTracker {
         fileWriter.close();
     }
 }
+
