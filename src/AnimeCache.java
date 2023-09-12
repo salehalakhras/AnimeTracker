@@ -1,7 +1,7 @@
 public class AnimeCache {
 
     private final int SIZE = 10;
-    private Anime[] animeList = new Anime[SIZE];
+    private final Anime[] animeList = new Anime[SIZE];
     private int index = 0;
 
     public AnimeCache() {
@@ -26,22 +26,16 @@ public class AnimeCache {
      * deletes the least recently used anime from the list
      */
     public void deleteLRU() {
-        int minUse = 100;
+        int minUse = animeList[0].getUseTimes();
         int LRUindex = 0;
-        // find the least used anime
+        // find the least recently used anime
         for (int i = 0; i < SIZE; i++) {
             if (animeList[i].getUseTimes() < minUse) {
                 minUse = animeList[i].getUseTimes();
+                LRUindex = i;
             }
         }
 
-        // find the oldest least recently used anime
-        for (int i = 0; i < SIZE; i++) {
-            if (animeList[i].getUseTimes() == minUse) {
-                LRUindex = i;
-                break;
-            }
-        }
         // if the LRU anime is the last anime in the list
         if (LRUindex == 9) {
             index--;
